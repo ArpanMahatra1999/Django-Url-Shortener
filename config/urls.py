@@ -1,28 +1,19 @@
-"""config URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
 
-from rest_framework.urlpatterns import format_suffix_patterns
+from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-from url.views import UrlList, Home, Detail
+from config.settings import MEDIA_URL, MEDIA_ROOT
+
+from url.views import UrlList, UrlDetail, Home, Detail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home', Home.as_view(), name='home'),
+    path('', Home.as_view(), name='home'),
     path('Detail/<int:pk>', Detail.as_view(), name='detail'),
-    path('url/', UrlList.as_view(), name='url-api')
-]
+    path('url/', UrlList.as_view(), name='url-list-api'),
+    path('url/<int:url_id>', UrlDetail.as_view(), name='url-detail-api')
+] + static(MEDIA_URL, document_root=MEDIA_ROOT)
+
+urlpatterns += staticfiles_urlpatterns()

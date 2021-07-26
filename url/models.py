@@ -9,7 +9,7 @@ def url_shortener(link):
 
 # Create your models here.
 class Url(models.Model):
-    long_url = models.URLField()
+    long_url = models.URLField(verbose_name='Type Url Here')
     short_url = models.URLField(null=True, blank=True)
 
     def save(self, *args, **kwargs):

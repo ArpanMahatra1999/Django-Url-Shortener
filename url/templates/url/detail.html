@@ -1,11 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>{{ url.long_url }}</h1>
-<p>{{ url.short_url }}</p>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}
+{{url.long_url}}
+{% endblock %}
+{% block content %}
+<h3 class="text-center">Your shortened Url</h3>
+<hr>
+<div class="row shadow mx-2 p-3 mb-2 rounded">
+    <div class="col-9 bg-light"><p id="text">{{ url.short_url }}</p></div>
+    <div class="col-3">
+        <button type="button" class="btn btn-success btn-block" onclick="copyToClipboard('#text')">Copy</button>
+    </div>
+</div>
+<h6 class="text-center">Source Url: <a href="{{ url.long_url }}" class="text-dark">{{ url.long_url }}</a></h6>
+<hr>
+<div class="text-center">
+    <a href="{% url 'home' %}"><button type="button" class="btn btn-success">Shorten Another Url</button></a>
+</div>
+<script>
+function copyToClipboard(element) {
+  var $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val($(element).text()).select();
+  document.execCommand("copy");
+  $temp.remove();
+}
+
+</script>
+{% endblock %}
