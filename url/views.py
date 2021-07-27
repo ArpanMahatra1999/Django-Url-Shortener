@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.views.generic import CreateView, DetailView
+from django.utils.decorators import method_decorator
+from django.views.generic import CreateView, DetailView, View
 
 from rest_framework import status
 from rest_framework.views import APIView
@@ -8,13 +10,23 @@ from rest_framework.response import Response
 
 from url.models import Url
 from url.serializers import urlsSerializer
+from ratelimit.decorators import ratelimit
 
 
 # Create your views here.
+@method_decorator(ratelimit(key='ip', rate='10/d', method='POST', block=True), name='dispatch')
 class Home(CreateView):
     model = Url
     fields = ['long_url']
     template_name = 'url/home.html'
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        try:
+            object_available = Url.objects.get(long_url=self.object.long_url)
+            return HttpResponseRedirect(reverse('detail', kwargs={'pk' : object_available.pk}))
+        except:
+            return super(Home, self).form_valid(form)
 
     def get_success_url(self):
         return reverse('detail', kwargs={'pk' : self.object.pk})
@@ -25,7 +37,15 @@ class Detail(DetailView):
     template_name = 'url/detail.html'
 
 
+class Short(View):
+    def get(self, request, *args, **kwargs):
+        token = self.kwargs['token']
+        url = Url.objects.get(token=token)
+        return HttpResponseRedirect(url.long_url)
+
+
 # Create your API Views here
+@method_decorator(ratelimit(key='ip', rate='10/d', method='POST', block=True), name='dispatch')
 class UrlList(APIView):
     def get(self, request):
         urls = Url.objects.all()
@@ -43,6 +63,8 @@ class UrlList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@method_decorator(ratelimit(key='ip', rate='10/d', method='PUT', block=True), name='dispatch')
+@method_decorator(ratelimit(key='ip', rate='10/d', method='DELETE', block=True), name='dispatch')
 class UrlDetail(APIView):
     def get_object(self, url_id):
         try:
