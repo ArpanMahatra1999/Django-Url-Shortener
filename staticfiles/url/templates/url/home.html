@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+Url Shortener
+{% endblock %}
+{% block content %}
+    <h3 class="text-center">Paste the url to be shortened</h3>
+    <hr>
+    <form method="post" class="text-center">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-success btn-block">Shorten</button>
+    </form>
+{% endblock %}

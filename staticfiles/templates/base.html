@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="{% static 'favicon.png' %}">
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+<header class="bg-success">
+    <div class="text-center py-4">
+        <a href="{% url 'home' %}" class="h1 text-center text-light text-decoration-none">
+            <div>
+                <img src="{% static 'favlogo.png' %}" height="50" width="50">
+                <strong>URL Shortener</strong>
+            </div>
+        </a>
+    </div>
+    <div class="py-3 green"></div>
+</header>
+<div class="container-fluid bg-light">
+    <div class="container py-3">
+        <div class="container white my-3 py-3 shadow p-3 mb-5 rounded">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <div class="container white my-3 py-3 shadow p-3 mb-5 rounded">
+            <h3 class="text-center">About this Tool</h3>
+            <hr>
+            <p class="text-center">
+                Url shortener is a free tool to shorten a URL or reduce a link.<br> Use our URL Shortener to create a
+                shortened link making it easy to remember.
+                <br>
+                View the apis <a href="{% url 'url-list-api' %}" class="text-decoration-none">here</a>.
+            </p>
+        </div>
+    </div>
+</div>
+<footer class="page-footer font-small blue">
+  <div class="footer-copyright text-center py-3">© 2021 Copyright:
+    <a href="http://thoplomachine.com/" class="text-decoration-none text-light">Thoplo Technology Pvt. Ltd.</a>
+  </div>
+</footer>
+</body>
+</html>
